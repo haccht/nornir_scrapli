@@ -2,6 +2,7 @@
 from typing import List, Optional, Tuple, Union
 
 from nornir.core.task import Result, Task
+from nornir_scrapli.result import ScrapliResult, process_command_result
 
 
 def send_interactive(
@@ -84,11 +85,10 @@ def send_interactive(
         timeout_ops=timeout_ops,
     )
 
-    result = Result(
+    result = ScrapliResult(
         host=task.host,
-        result=scrapli_response,
-        failed=scrapli_response.failed,
+        result=process_command_result(scrapli_response=scrapli_response),
+        scrapli_response=scrapli_response,
         changed=True,
     )
-    setattr(result, "scrapli_response", scrapli_response)
     return result
